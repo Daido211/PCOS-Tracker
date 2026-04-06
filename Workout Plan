@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your 3-Month Movement Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6f1;
+    --warm-white: #fff9f4;
+    --blush: #e8c4b0;
+    --terracotta: #c4724a;
+    --deep: #2c1f18;
+    --muted: #8a7060;
+    --sage: #8a9e8c;
+    --sage-light: #d4e0d5;
+    --complete: #6b8f6e;
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background-color: var(–cream);
+color: var(–deep);
+font-family: ‘Jost’, sans-serif;
+font-weight: 300;
+min-height: 100vh;
+}
+
+header {
+text-align: center;
+padding: 48px 20px 32px;
+border-bottom: 1px solid var(–blush);
+background: var(–warm-white);
+}
+
+header h1 {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: clamp(2rem, 6vw, 3.5rem);
+font-weight: 300;
+font-style: italic;
+color: var(–terracotta);
+letter-spacing: 0.02em;
+line-height: 1.1;
+}
+
+header p {
+margin-top: 8px;
+font-size: 0.85rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(–muted);
+}
+
+.phase-banner {
+padding: 10px 20px;
+text-align: center;
+font-size: 0.75rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+font-weight: 500;
+}
+
+.phase-1-banner { background: #f3e8e0; color: var(–terracotta); }
+.phase-2-banner { background: #e8ede9; color: #5a7a5c; }
+.phase-3-banner { background: #e8e0ed; color: #7a5a8a; }
+
+.month-section {
+max-width: 900px;
+margin: 0 auto;
+padding: 32px 16px;
+}
+
+.month-title {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 1.8rem;
+font-weight: 400;
+color: var(–deep);
+margin-bottom: 6px;
+}
+
+.month-subtitle {
+font-size: 0.75rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 24px;
+}
+
+.week-grid {
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 8px;
+margin-bottom: 24px;
+}
+
+.day-label {
+text-align: center;
+font-size: 0.65rem;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+color: var(–muted);
+padding-bottom: 6px;
+}
+
+.day-card {
+position: relative;
+background: var(–warm-white);
+border: 1px solid #e8ddd5;
+border-radius: 10px;
+padding: 10px 8px 8px;
+min-height: 110px;
+cursor: pointer;
+transition: all 0.25s ease;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+}
+
+.day-card:hover {
+border-color: var(–terracotta);
+transform: translateY(-1px);
+box-shadow: 0 4px 16px rgba(196,114,74,0.1);
+}
+
+.day-card.rest {
+background: #f9f5f2;
+cursor: default;
+}
+
+.day-card.rest:hover {
+transform: none;
+border-color: #e8ddd5;
+box-shadow: none;
+}
+
+.day-card.completed {
+background: #f0f5f0;
+border-color: var(–complete);
+}
+
+.day-number {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 1.1rem;
+font-weight: 600;
+color: var(–deep);
+line-height: 1;
+margin-bottom: 4px;
+}
+
+.day-type {
+font-size: 0.6rem;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(–terracotta);
+font-weight: 500;
+margin-bottom: 4px;
+}
+
+.day-card.rest .day-type { color: var(–muted); }
+
+.day-workout {
+font-size: 0.65rem;
+color: var(–muted);
+line-height: 1.4;
+flex: 1;
+}
+
+.check-area {
+display: flex;
+align-items: center;
+gap: 5px;
+margin-top: 6px;
+}
+
+.check-box {
+width: 16px;
+height: 16px;
+border: 1.5px solid var(–blush);
+border-radius: 4px;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+transition: all 0.2s ease;
+}
+
+.day-card.completed .check-box {
+background: var(–complete);
+border-color: var(–complete);
+}
+
+.check-icon {
+display: none;
+color: white;
+font-size: 10px;
+line-height: 1;
+}
+
+.day-card.completed .check-icon { display: block; }
+
+.check-label {
+font-size: 0.6rem;
+color: var(–muted);
+letter-spacing: 0.08em;
+text-transform: uppercase;
+}
+
+.day-card.completed .check-label {
+color: var(–complete);
+}
+
+/* X overlay */
+.x-overlay {
+display: none;
+position: absolute;
+inset: 0;
+align-items: center;
+justify-content: center;
+pointer-events: none;
+}
+
+.day-card.completed .x-overlay { display: flex; }
+
+.x-line {
+position: absolute;
+inset: 0;
+}
+
+.x-line::before,
+.x-line::after {
+content: ‘’;
+position: absolute;
+background: rgba(107, 143, 110, 0.18);
+border-radius: 2px;
+top: 50%;
+left: 10%;
+width: 80%;
+height: 2px;
+}
+
+.x-line::before { transform: translateY(-50%) rotate(18deg); }
+.x-line::after { transform: translateY(-50%) rotate(-18deg); }
+
+.progress-bar-wrap {
+background: #e8ddd5;
+border-radius: 100px;
+height: 6px;
+margin: 0 0 32px;
+overflow: hidden;
+}
+
+.progress-bar-fill {
+height: 100%;
+background: linear-gradient(90deg, var(–terracotta), var(–sage));
+border-radius: 100px;
+transition: width 0.5s ease;
+}
+
+.progress-label {
+font-size: 0.72rem;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 8px;
+}
+
+.legend {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+padding: 20px;
+background: var(–warm-white);
+border-top: 1px solid var(–blush);
+justify-content: center;
+}
+
+.legend-item {
+display: flex;
+align-items: center;
+gap: 6px;
+font-size: 0.7rem;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+color: var(–muted);
+}
+
+.legend-dot {
+width: 8px;
+height: 8px;
+border-radius: 50%;
+}
+
+.week-divider {
+grid-column: 1 / -1;
+height: 1px;
+background: var(–blush);
+margin: 2px 0;
+opacity: 0.5;
+}
+
+@media (max-width: 600px) {
+.week-grid { gap: 4px; }
+.day-card { min-height: 90px; padding: 7px 5px 6px; }
+.day-number { font-size: 0.95rem; }
+.day-workout { font-size: 0.58rem; }
+}
+</style>
+
+</head>
+<body>
+
+<header>
+  <h1>Your Movement Journey</h1>
+  <p>3 Months · Progressive · Body Weight + Pilates</p>
+</header>
+
+<div id="app"></div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--terracotta)"></div> Workout</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--sage)"></div> Complete</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#e8ddd5"></div> Rest</div>
+</div>
+
+<script>
+const workouts = {
+  // PHASE 1: WEEKS 1-4 — Foundation (gentle, establishing habit)
+  phase1: {
+    label: "Phase 1 — Foundation",
+    bannerClass: "phase-1-banner",
+    days: [
+      // Week 1
+      { type: "Pilates", desc: "Breathing + pelvic floor. 20 min.\nJessica Valant beginner day 1" },
+      { type: "Walk", desc: "20 min gentle walk.\nFocus on posture, breathe deeply" },
+      { type: "Pilates", desc: "Core foundations. 20 min.\nHundreds, single leg stretch" },
+      { type: "Rest", desc: "Rest & recover.\nStretch if you feel like it" },
+      { type: "Pilates", desc: "Leg circles + bridges. 20 min.\nFocus on glutes & inner thighs" },
+      { type: "Walk", desc: "25 min walk.\nArms swinging, good pace" },
+      { type: "Rest", desc: "Full rest day.\nYou earned it" },
+      // Week 2
+      { type: "Pilates", desc: "Spine stretch + rolling. 25 min.\nSlow and controlled" },
+      { type: "Walk", desc: "25 min walk + 10 bodyweight squats\nat end of walk" },
+      { type: "Pilates", desc: "Single leg work. 25 min.\nInner thigh & outer hip focus" },
+      { type: "Rest", desc: "Rest day.\nLight stretching optional" },
+      { type: "Pilates", desc: "Abs + glutes combo. 25 min.\nBridge pulses, leg lifts" },
+      { type: "Walk", desc: "30 min walk.\nPick up pace for last 10 min" },
+      { type: "Rest", desc: "Full rest day." },
+      // Week 3
+      { type: "Pilates", desc: "Teaser prep + swan. 25 min.\nSpine extension focus" },
+      { type: "Walk + Strength", desc: "25 min walk + wall sits\n3x30 sec after walk" },
+      { type: "Pilates", desc: "Side lying series. 25 min.\nOuter thigh & hip sculpting" },
+      { type: "Rest", desc: "Rest day." },
+      { type: "Pilates", desc: "Lower belly focus. 25 min.\nDouble leg stretch, scissors" },
+      { type: "Walk", desc: "30 min walk.\nInterval: 1 min brisk, 2 min easy" },
+      { type: "Rest", desc: "Full rest day." },
+      // Week 4
+      { type: "Pilates", desc: "Full body flow. 30 min.\nPut it all together" },
+      { type: "Walk + Strength", desc: "30 min walk + 15 squats\n+ 10 push-up against wall" },
+      { type: "Pilates", desc: "Core + thighs. 30 min.\nFocus on lower belly" },
+      { type: "Rest", desc: "Rest day." },
+      { type: "Pilates", desc: "Hip flexors + glutes. 30 min.\nBridge variations" },
+      { type: "Walk", desc: "35 min walk.\nPush pace today" },
+      { type: "Rest", desc: "Full rest — week 4 done! 🎉" },
+    ]
+  },
+  // PHASE 2: WEEKS 5-8 — Build
+  phase2: {
+    label: "Phase 2 — Build",
+    bannerClass: "phase-2-banner",
+    days: [
+      // Week 5
+      { type: "Pilates", desc: "Intermediate intro. 30 min.\nTeaser, criss-cross, swimming" },
+      { type: "Walk + Strength", desc: "30 min walk + 20 squats\n+ 10 push-ups (incline ok)" },
+      { type: "Pilates", desc: "Side series advanced. 30 min.\nBand optional, use ankle weights" },
+      { type: "Rest", desc: "Rest day." },
+      { type: "Pilates", desc: "Lower belly burn. 30 min.\nScissors, leg lowers, hundreds" },
+      { type: "Walk", desc: "40 min walk.\nHilly route if possible" },
+      { type: "Rest", desc: "Full rest day." },
+      // Week 6
+      { type: "Pilates + Strength", desc: "35 min Pilates.\nAdd 3x10 glute bridges weighted" },
+      { type: "Walk + Strength", desc: "35 min walk + 20 squats\n+ 15 push-ups + 30 sec plank" },
+      { type: "Pilates", desc: "Thigh & hip focus. 35 min.\nSide kicks, inner thigh lifts" },
+      { type: "Rest", desc: "Rest day." },
+      { type: "Pilates", desc: "Core power. 35 min.\nFull hundred, teasers" },
+      { type: "Walk", desc: "40 min walk.\nInterval: 2 min brisk, 1 min easy" },
+      { type: "Rest", desc: "Full rest day." },
+      // Week 7
+      { type: "Pilates", desc: "Full intermediate flow. 35 min.\nNo breaks between exercises" },
+      { type: "Walk + Strength", desc: "35 min walk + circuit:\n20 squats, 15 push-ups, 45s plank" },
+      { type: "Pilates", desc: "Booty & legs. 35 min.\nFire hydrants, donkey kicks, bridges" },
+      { type: "Rest", desc: "Rest day." },
+      { type: "Pilates", desc: "Lower ab focus. 35 min.\nDouble leg lower, v-sits" },
+      { type: "Walk", desc: "45 min walk.\nBest pace you've got" },
+      { type: "Rest", desc: "Full rest day." },
+      // Week 8
+      { type: "Pilates + Strength", desc: "40 min Pilates.\nWeighted bridges, weighted leg lifts" },
+      { type: "Walk + Strength", desc: "40 min walk + circuit x2:\n20 squats, 15 push-ups, 1 min plank" },
+      { type: "Pilates", desc: "Full body sculpt. 40 min.\nArms, legs, core, glutes" },
+      { type: "Rest", desc: "Rest day." },
+      { type: "Pilates", desc: "Core + inner thighs. 40 min.\nPilates ball optional" },
+      { type: "Walk", desc: "45 min walk.\nCelebrate halfway! 🎉" },
+      { type: "Rest", desc: "Full rest — halfway done!" },
+    ]
+  },
+  // PHASE 3: WEEKS 9-13 — Strength
+  phase3: {
+    label: "Phase 3 — Strength",
+    bannerClass: "phase-3-banner",
+    days: [
+      // Week 9
+      { type: "Pilates", desc: "Advanced flow. 40 min.\nBonus: 10 min stretch after" },
+      { type: "Walk + Strength", desc: "40 min walk + circuit x2:\n25 squats, 20 push-ups, 1 min plank" },
+      { type: "Pilates", desc: "Legs & seat. 40 min.\nFull side series + bridges" },
+      { type: "Rest", desc: "Rest day." },
+      { type: "Pilates", desc: "Lower belly & obliques. 40 min.\nFull criss-cross, teasers" },
+      { type: "Walk", desc: "50 min walk.\nYour strongest yet" },
+      { type: "Rest", desc: "Full rest day." },
+      // Week 10
+      { type: "Pilates + Strength", desc: "45 min Pilates.\nWeighted everything" },
+      { type: "Walk + Strength", desc: "45 min walk + circuit x3:\n20 squats, 15 push-ups, 45s plank" },
+      { type: "Pilates", desc: "Hip & thigh sculpt. 45 min.\nAdvanced side series" },
+      { type: "Rest", desc: "Rest day." },
+      { type: "Pilates", desc: "Core intensive. 45 min.\nFull advanced series" },
+      { type: "Walk", desc: "50 min walk.\nInterval every 5 min" },
+      { type: "Rest", desc: "Full rest day." },
+      // Week 11
+      { type: "Pilates", desc: "Full advanced flow. 45 min.\nNo modifications today" },
+      { type: "Walk + Strength", desc: "45 min walk + circuit x3:\n30 squats, 20 push-ups, 1 min plank" },
+      { type: "Pilates", desc: "Booty burn. 45 min.\nGlute focus, hip flexors" },
+      { type: "Rest", desc: "Rest day." },
+      { type: "Pilates", desc: "Lower body intensive. 45 min.\nThighs, seat, calves" },
+      { type: "Walk", desc: "55 min walk.\nYou've come so far" },
+      { type: "Rest", desc: "Full rest day." },
+      // Week 12
+      { type: "Pilates + Strength", desc: "50 min Pilates.\nFull advanced weighted series" },
+      { type: "Walk + Strength", desc: "50 min walk + circuit x3:\n30 squats, 25 push-ups, 90s plank" },
+      { type: "Pilates", desc: "Full body final push. 50 min.\nEverything you've got" },
+      { type: "Rest", desc: "Rest day." },
+      { type: "Pilates", desc: "Core & legs finale. 50 min.\nYour strongest session" },
+      { type: "Walk", desc: "60 min walk.\nCelebration walk 🎉" },
+      { type: "Rest", desc: "FINAL REST DAY.\n3 months complete. You did it. 🌸" },
+    ]
+  }
+};
+
+const phaseMonthNames = ["April — May 2026", "May — June 2026", "June — July 2026"];
+const phaseDescriptions = ["Weeks 1–4 · Gentle foundation, building the habit", "Weeks 5–8 · Building strength & endurance", "Weeks 9–12 · Full strength, you've got this"];
+
+function getStorageKey(phase, dayIndex) {
+  return `workout_${phase}_${dayIndex}`;
+}
+
+function isCompleted(phase, dayIndex) {
+  return localStorage.getItem(getStorageKey(phase, dayIndex)) === '1';
+}
+
+function toggleComplete(phase, dayIndex, card) {
+  const key = getStorageKey(phase, dayIndex);
+  const current = localStorage.getItem(key) === '1';
+  if (current) {
+    localStorage.removeItem(key);
+    card.classList.remove('completed');
+  } else {
+    localStorage.setItem(key, '1');
+    card.classList.add('completed');
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = 84;
+  let done = 0;
+  ['phase1','phase2','phase3'].forEach(phase => {
+    workouts[phase].days.forEach((_, i) => {
+      if (isCompleted(phase, i)) done++;
+    });
+  });
+  const pct = Math.round((done/total)*100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${done} of ${total} days complete — ${pct}%`;
+}
+
+function buildCalendar() {
+  const app = document.getElementById('app');
+  const phases = ['phase1','phase2','phase3'];
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  // Progress
+  const progWrap = document.createElement('div');
+  progWrap.style.cssText = 'max-width:900px;margin:24px auto 0;padding:0 16px';
+  progWrap.innerHTML = `
+    <div class="progress-label" id="progress-text">0 of 84 days complete — 0%</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+  `;
+  app.appendChild(progWrap);
+
+  phases.forEach((phase, pi) => {
+    const data = workouts[phase];
+
+    // Phase banner
+    const banner = document.createElement('div');
+    banner.className = `phase-banner ${data.bannerClass}`;
+    banner.textContent = `✦ ${data.label} ✦`;
+    app.appendChild(banner);
+
+    const section = document.createElement('div');
+    section.className = 'month-section';
+
+    const title = document.createElement('div');
+    title.className = 'month-title';
+    title.textContent = phaseMonthNames[pi];
+    section.appendChild(title);
+
+    const sub = document.createElement('div');
+    sub.className = 'month-subtitle';
+    sub.textContent = phaseDescriptions[pi];
+    section.appendChild(sub);
+
+    // Day name headers
+    const grid = document.createElement('div');
+    grid.className = 'week-grid';
+
+    dayNames.forEach(d => {
+      const lbl = document.createElement('div');
+      lbl.className = 'day-label';
+      lbl.textContent = d;
+      grid.appendChild(lbl);
+    });
+
+    data.days.forEach((workout, di) => {
+      const isRest = workout.type === 'Rest';
+      const completed = isCompleted(phase, di);
+
+      const card = document.createElement('div');
+      card.className = `day-card${isRest ? ' rest' : ''}${completed ? ' completed' : ''}`;
+
+      card.innerHTML = `
+        <div class="day-number">${di + 1}</div>
+        <div class="day-type">${workout.type}</div>
+        <div class="day-workout">${workout.desc.replace(/\n/g,'<br>')}</div>
+        ${!isRest ? `
+        <div class="check-area">
+          <div class="check-box"><span class="check-icon">✓</span></div>
+          <span class="check-label">${completed ? 'Done!' : 'Mark done'}</span>
+        </div>
+        <div class="x-overlay"><div class="x-line"></div></div>
+        ` : ''}
+      `;
+
+      if (!isRest) {
+        card.addEventListener('click', () => {
+          toggleComplete(phase, di, card);
+          const lbl = card.querySelector('.check-label');
+          if (lbl) lbl.textContent = card.classList.contains('completed') ? 'Done!' : 'Mark done';
+        });
+      }
+
+      grid.appendChild(card);
+
+      // Add week divider after every 7 days
+      if ((di + 1) % 7 === 0 && di < data.days.length - 1) {
+        const div = document.createElement('div');
+        div.className = 'week-divider';
+        grid.appendChild(div);
+        // Re-add day labels for visual clarity on next week
+      }
+    });
+
+    section.appendChild(grid);
+    app.appendChild(section);
+  });
+
+  updateProgress();
+}
+
+buildCalendar();
+</script>
+
+</body>
+</html>
